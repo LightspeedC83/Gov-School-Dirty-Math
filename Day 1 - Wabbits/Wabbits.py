@@ -34,11 +34,46 @@ def problem_1(depth):
         for x in range(len(wabbits_list)):
             wabbits_list.append(Wabbit_Pair(reproductive_strength=1, years_til_fertility=0))
         
-        
-
-    print(x_points_list, "\n", y_points_list)
     #making the plot 
     plt.plot(x_points_list, y_points_list)
     plt.show()
     
-problem_1(10)
+# problem_1(10)
+
+def problem_2(depth):
+    """repeat problem 1 except a pair of rabbits gives birth
+    to one pair of baby rabbits every year bgeggining at age two years"""
+    
+    #setting up the plot
+    plt.xlabel("year")
+    plt.ylabel("number of rabbit pairs")
+    plt.title("Wabbits - problem 1")
+
+    #setting up the simulation
+    wabbits_list = []
+    wabbits_list.append(Wabbit_Pair(reproductive_strength=1, years_til_fertility=2))
+
+    x_points_list = []
+    y_points_list = []
+    #starting the simulation
+    for year in range(depth+1):
+        x_points_list.append(year)
+        y_points_list.append(len(wabbits_list))
+
+        new_wabbits = []
+        for wabbit in wabbits_list:
+            if wabbit.age >= wabbit.years_til_fertility-1:
+                new_wabbits.append(Wabbit_Pair(reproductive_strength=1, years_til_fertility=0))
+            
+            
+        wabbits_list = wabbits_list + new_wabbits
+        for wabbit in wabbits_list:
+            wabbit.age +=1
+            
+    print(x_points_list)
+    print(y_points_list)
+    #making the plot 
+    plt.plot(x_points_list, y_points_list)
+    plt.show()
+
+problem_2(5)
