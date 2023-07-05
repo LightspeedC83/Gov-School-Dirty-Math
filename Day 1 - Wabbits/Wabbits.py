@@ -65,11 +65,11 @@ def problem_2(depth):
             if wabbit.age >= wabbit.years_til_fertility-1:
                 new_wabbits.append(Wabbit_Pair(reproductive_strength=1, years_til_fertility=0))
             
-            
+            ### i know this is the problem area, we should be getting fibonacci sequence but no
         wabbits_list = wabbits_list + new_wabbits
         for wabbit in wabbits_list:
             wabbit.age +=1
-            
+
     print(x_points_list)
     print(y_points_list)
     #making the plot 
