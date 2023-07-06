@@ -23,7 +23,7 @@ def problem_5(p):
         plt.ylabel("Y")
         plt.title("Day 3 Problem 5")
         
-        plt.plot(x_list,y_list, label="squirril population")
+        plt.plot(x_list,y_list, label="squirrel population")
         leg = plt.legend(loc='upper right')
         plt.show()
 
