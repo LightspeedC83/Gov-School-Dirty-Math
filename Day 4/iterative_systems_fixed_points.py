@@ -28,7 +28,7 @@ depth = 15
 iterative_x_list = []
 iterative_y_list = []
 for n in range(depth):
-    
+    pass #continue working on
 
 
 
