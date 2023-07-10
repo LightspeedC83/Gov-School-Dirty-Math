@@ -1,6 +1,6 @@
 /* return an array of numbers inclusively between a and b */
 function listNumbers(a: number, b: number): number[] {
-    let result: number[] = [];
+    const result: number[] = [];
     for (let i = a; i <= b; i++) {
         result.push(i);
     }
@@ -105,10 +105,10 @@ if (!args) {
     for (const config of configs) {
         const game = new Game(config as [number, number, number]);
         const value = negamax(game);
-        mentionedConfigs.add(config.sort().join("-") + `: ${value}`);
-    }
-
-    for (const config of mentionedConfigs) {
-        if (parseInt(config.split(" ")[1]) < 0) console.log(config);
+        const stringifiedConfig = config.sort().join("-") + `: ${value} (${config.reduce((a, b) => a + b)})`;
+        if (!mentionedConfigs.has(stringifiedConfig)) {
+            mentionedConfigs.add(stringifiedConfig);
+            if (value < 0) console.log(stringifiedConfig);
+        }
     }
 }
