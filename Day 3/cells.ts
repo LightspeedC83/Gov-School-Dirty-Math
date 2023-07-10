@@ -36,8 +36,6 @@ function displayCells(cells: number[]) {
     console.log(consoleStr.trimEnd() == "" ? consoleStr : consoleStr.trimEnd());
 }
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
 console.clear();
 
 // we want to iterate forever while keeping track of the iteration number
