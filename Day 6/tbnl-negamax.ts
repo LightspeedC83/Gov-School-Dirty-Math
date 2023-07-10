@@ -92,17 +92,23 @@ if (!args) {
 
     // get every config and negamax it
     const configs = [];
-    for (let a = 0; a <= 7; a++) {
+    for (let a = 0; a <= 3; a++) {
         for (let b = 0; b <= 5; b++) {
-            for (let c = 0; c <= 3; c++) {
+            for (let c = 0; c <= 7; c++) {
                 configs.push([a, b, c]);
             }
         }
     }
 
+    const mentionedConfigs: Set<string> = new Set();
+
     for (const config of configs) {
         const game = new Game(config as [number, number, number]);
         const value = negamax(game);
-        console.log(config, value);
+        mentionedConfigs.add(config.sort().join("-") + `: ${value}`);
+    }
+
+    for (const config of mentionedConfigs) {
+        if (parseInt(config.split(" ")[1]) < 0) console.log(config);
     }
 }
