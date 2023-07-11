@@ -4,8 +4,8 @@ enum Player {
 }
 
 interface Game<Move> {
-    numberOfMoves: number;
-    size: number;
+    readonly numberOfMoves: number;
+    readonly size: number;
     clone(): Game<Move>;
     possibleMoves(): Move[];
     move(move: Move): void;
@@ -14,10 +14,10 @@ interface Game<Move> {
 }
 
 class Domineering implements Game<[row: number, col: number]> {
-    state: boolean[][];
+    private state: boolean[][];
     player: Player;
     numberOfMoves = 0;
-    size: number;
+    readonly size: number;
 
     constructor(width = 4, height = 4) {
         this.state = Array.from({ length: height }, () => Array.from({ length: width }, () => false));
