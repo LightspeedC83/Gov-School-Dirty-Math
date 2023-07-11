@@ -5,14 +5,14 @@ def find_new(x):
 
 depth = 100
 n_list = [0]
-outputs = [0.8] #starting value
+outputs = [0.732] #starting value
 
 for n in range(1,depth):
     outputs.append(find_new(outputs[-1]))
     n_list.append(n)
 
-print(n_list)
-print(outputs)
+# print(n_list)
+# print(outputs)
 
 plt.xlabel("iterations")
 plt.ylabel("output_value")

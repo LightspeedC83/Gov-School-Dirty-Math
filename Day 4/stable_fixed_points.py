@@ -4,8 +4,8 @@ plt.xlabel("iterations")
 plt.ylabel("Y")
 plt.title("Day 4, fixed points discussion \nA(n) = -0.5*A(n-1)+12")
 
-lower = -100
-upper = 100
+lower = -10
+upper = 10
 depth = 20
 
 x_list = [x for x in range(depth+1)]

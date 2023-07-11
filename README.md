@@ -3,4 +3,4 @@ A repository for all the programs, simulations, etc. I make associated with the 
 - The course focuses on the evolution of systems over time
 - This repository is divided up into folders for each day of the course
     - Some of the simulations are from problems across multiple days that continue along the same idea
- 
+- Some of the programs and simulations will not be functional. If so there will be a comment at the top saying so
