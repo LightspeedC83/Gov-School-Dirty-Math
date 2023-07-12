@@ -76,19 +76,27 @@ class Chomp implements Game<[row: number, col: number]> {
     }
 }
 
-function negamax(game: Game<unknown>): number {
+function negamax(game: Game<unknown>, alpha: number, beta: number): number {
     for (const move of game.possibleMoves()) {
         if (game.isWinningMove(move)) {
             return game.size - game.numberOfMoves;
         }
     }
 
+    let max = game.size - game.numberOfMoves;
     let bestValue = -Infinity;
+
+    if(beta > max) {
+        beta = max;                     // there is no need to keep beta above our max possible score.
+        if (alpha >= beta) return beta;  // prune the exploration if the [alpha;beta] window is empty.
+    }
+
     game.possibleMoves().forEach(move => {
         const gameCopy = game.clone<Chomp>();
         gameCopy.move(move as any);
-        const value = -negamax(gameCopy);
-        bestValue = Math.max(bestValue, value);
+        const value = -negamax(gameCopy, -beta, -alpha);
+        
+        if (score >= beta) return score;
     });
 
     return bestValue;
