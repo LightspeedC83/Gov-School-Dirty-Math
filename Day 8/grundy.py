@@ -12,12 +12,12 @@ is a list of numbers each representing a different sized pile in said state.
 """
 
 class State():
-    def __init__(self, depth, piles, parent=None, child=None):
+    def __init__(self, depth, piles, parents=[], children=[]):
         """piles is a list of numbers, each representing a different pile"""
         self.depth = depth
         self.piles = piles
-        self.parent = parent
-        self.child = child
+        self.parents = parents
+        self.children = children
 
         # checking to see whether the piles in this state object make a dead state (ie. only 1s or 2s)
         dead_piles = 0
@@ -42,31 +42,33 @@ def break_up_num(num):
                 break
     return(output)
 
-def check_duplicates(tree_list): #doesn't work yet
+def check_duplicates(tree_list):
     """takes the main_list tree and checks for and 
     removes duplicate states at each level, returning the new list without duplicates."""
     output = []
-    depth = 0
     for level in tree_list:
-        level_list = [x[1] for x in level]
-        no_duplicates = []
-        for state in level_list:
+        no_duplicates = [level[0]]
+        for state in level:
+            state_sorted = state.piles
+            state_sorted.sort()
+            
+            different_count = 0
             for other in no_duplicates:
-                other_other = other[:]
-                same_count = 0
-                for x in state:
-                    if x in other_other:
-                        same_count +=1
-                        other_other.remove(x)
-                if same_count != len(state):
-                    no_duplicates.append(state)
+                other_sorted = other.piles
+                other_sorted.sort()
+
+                if state_sorted != other_sorted: # if not same, adds state to no duplicates
+                    different_count +=1
+                else: # if same, adjusts parent child relationship (essentially merges the objects)
+                    other.parents += state.parents
+                    other.children += state.children
+                    del state
+                    break
+            if different_count == len(no_duplicates):
+                no_duplicates.append(state)
 
         # reformatting the list of states without duplicates
-        depth +=1
-        to_append = []
-        for state in no_duplicates:
-            to_append.append([depth,state])
-        output.append(to_append)
+        output.append(no_duplicates)
     return(output)
 
 def print_tree(tree_list):
@@ -83,12 +85,13 @@ def print_tree(tree_list):
 
 
 depth = 0
-starting_value = 10
+starting_value = 7
 starting_state = State(depth, piles=[starting_value]) # each state is represented by a list in the form [level (ie. depth), [list of numbers, each representing a pile at said level]]
 
 master_list = [] 
 previous_list = [starting_state]
 
+#main
 while True:
     current_list = []
     depth +=1
@@ -101,9 +104,10 @@ while True:
                     list_copy = state.piles[:]
                     del list_copy[pile_num]
                     new_list = list_copy[:pile_num] + new +list_copy[pile_num:]
-                    new_object = State(depth,new_list, parent=state)
+                    new_object = State(depth,new_list)
+                    new_object.parents.append(state)
                     current_list.append(new_object)
-                    state.child = new_object
+                    state.children.append(new_object)
 
             pile_num +=1
 
@@ -124,5 +128,8 @@ while True:
         current_list = []
 
 
+print("\nno duplicates:")
+print_tree(check_duplicates(master_list))
 
-# print(check_duplicates(master_list))
+
+
