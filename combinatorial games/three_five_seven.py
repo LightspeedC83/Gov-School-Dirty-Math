@@ -22,6 +22,7 @@ def display_board(board):
     print(output)
 
 def update_board(board, row, num_to_eliminate):
+    """function that updates game board by taking away num_to_eliminate sticks from the row row"""
     new_board = board
     start_index = len([x for x in board[row-1] if x == 0])
     for x in range(start_index, start_index + num_to_eliminate):
@@ -59,7 +60,5 @@ while done == False:
         else:
             print("Please enter an integer.")
             continue
-        
-        
     
     update_board(board, row, num_to_eliminate)

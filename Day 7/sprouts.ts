@@ -5,7 +5,7 @@ interface Node {
     id: string;
 }
 
-function node(): Node {
+function createNode(): Node {
     return {
         connections: [],
         parents: [],
@@ -20,7 +20,24 @@ interface Move {
     reparent: Node[];
 }
 
-const nodes: Node[] = Array.from({ length: 2 }, node);
+function resolveMove(move: Move): Move[] {
+    const { from, to, reparent } = move;
+
+    const newNode = createNode();
+
+    return [{
+        from,
+        to: newNode,
+        reparent,
+    }, {
+        from: newNode,
+        to,
+        reparent,
+    }];
+}
+
+
+const nodes: Node[] = Array.from({ length: 2 }, createNode);
 
 /* a node is dead when it has 3 connections */
 const isDead = (node: Node) => {
@@ -28,7 +45,7 @@ const isDead = (node: Node) => {
     return node.connections.length >= 3;
 }
 
-function possibleMoves(nodes: Node[]): Move {
+function possibleMoves(nodes: Node[]): Move[] {
     const moves: Move[] = [];
 
     for (const node of nodes) {
@@ -36,12 +53,12 @@ function possibleMoves(nodes: Node[]): Move {
             continue;
         }
 
-        // if the node has 1 connection, it can be connected to itself
-        if (node.connections.length === 1) {
+        // if the node has 1 or less connections, it can be connected to itself
+        if (node.connections.length <= 1) {
             moves.push({
                 from: node,
                 to: node,
-                reparent: []
+                reparent: [],
             });
 
             // now we can talk about parenting nodes - since this node has 1 connection, we can connect it to itself while trrapping a node
@@ -60,7 +77,7 @@ function possibleMoves(nodes: Node[]): Move {
                 to: childNode,
                 // we aren't adding new parents to the child node
                 // since the child node is already connected to the parent node
-                reparent: []
+                reparent: [],
             });
         }
 
@@ -74,8 +91,28 @@ function possibleMoves(nodes: Node[]): Move {
                 to: parentNode,
                 // we aren't adding new children to the parent node
                 // since the parent node is already connected to the child node
-                reparent: []
+                reparent: [],
             });
         }
+
+        // then we'll check for nodes that don't have parents
+        // and see if we can connect to them
+        for (const node of nodes) {
+            if (isDead(node)) {
+                continue;
+            }
+
+            if (node.parents.length === 0) {
+                moves.push({
+                    from: node,
+                    to: node,
+                    reparent: [],
+                });
+            }
+        }
     }
+
+    return moves.flatMap(move => resolveMove(move));
 }
+
+console.log(possibleMoves(nodes));
