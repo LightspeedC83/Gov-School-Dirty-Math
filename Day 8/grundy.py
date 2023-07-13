@@ -12,35 +12,24 @@ is a list of numbers each representing a different sized pile in said state.
 """
 
 class State():
-    def __init__(self, piles, parent, child):
+    def __init__(self, depth, piles, parent=None, child=None):
         """piles is a list of numbers, each representing a different pile"""
+        self.depth = depth
         self.piles = piles
         self.parent = parent
         self.child = child
 
-    def check_is_dead(self):
-        """function that checks whether or not a given state has no possible moves left to make
-        (ie. the only remaining piles are of size 1 or 2)"""
+        # checking to see whether the piles in this state object make a dead state (ie. only 1s or 2s)
         dead_piles = 0
         for pile in self.piles:
             if pile in [1,2]:
                 dead_piles +=1
     
         if dead_piles == len(self.piles):
-            return True
+            self.is_dead = True
         else:
-            return False
-
-def check_is_dead(state):
-    """function that checks whether or not a given state has no possible moves left to make
-    (ie. the only remaining piles are of size 1 or 2)"""
-    dead_piles = 0
-    for pile in state[1]:
-        if pile in [1,2]:
-            dead_piles +=1
-    
-    if dead_piles == len(state[1]):
-        return True
+            self.is_dead = False
+            
 
 def break_up_num(num):
     """function that returns a list of the ways to break up an inputted number into two other uneven nubmers"""
@@ -88,14 +77,14 @@ def print_tree(tree_list):
         print("-"*10 + f"\nDepth = {depth}:\n" + "-"*10)
         output = ""
         for state in level:
-            output += f"{state[1]},  "
+            output += f"{state.piles},  "
         print(output)
         depth +=1
 
 
 depth = 0
 starting_value = 10
-starting_state = [depth, [starting_value]] # each state is represented by a list in the form [level (ie. depth), [list of numbers, each representing a pile at said level]]
+starting_state = State(depth, piles=[starting_value]) # each state is represented by a list in the form [level (ie. depth), [list of numbers, each representing a pile at said level]]
 
 master_list = [] 
 previous_list = [starting_state]
@@ -106,13 +95,15 @@ while True:
     for state in previous_list:
         # going through each state at the given depth
         pile_num = 0
-        for pile in state[1]:
+        for pile in state.piles:
             if pile not in [1,2]:
                 for new in break_up_num(pile):
-                    list_copy = state[1][:]
+                    list_copy = state.piles[:]
                     del list_copy[pile_num]
                     new_list = list_copy[:pile_num] + new +list_copy[pile_num:]
-                    current_list.append([depth, new_list])
+                    new_object = State(depth,new_list, parent=state)
+                    current_list.append(new_object)
+                    state.child = new_object
 
             pile_num +=1
 
@@ -122,7 +113,7 @@ while True:
     #condition for exiting loop if all branches are dead
     num_dead = 0
     for state in current_list:
-        if check_is_dead(state):
+        if state.is_dead:
             num_dead +=1
     if num_dead == len(current_list): # if we are at the end (ie. max possible depth)
         master_list.append(current_list)
@@ -131,5 +122,7 @@ while True:
     else: #resetting and repeating the loop
         previous_list = current_list[:]
         current_list = []
+
+
 
 # print(check_duplicates(master_list))
