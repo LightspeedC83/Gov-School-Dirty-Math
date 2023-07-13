@@ -1,14 +1,17 @@
-const letters = ["a", "b"]
+const letters = ["a", "b", "c"]
 
 // string is ok when there are not two adjacent identical letter blocks
 function isStringOk(string: string) {
     for (let i = 0; i < string.length; i++) {
         for (let j = i + 1; j <= string.length; j++) {
             const str = string.slice(i, j);
-            if (string.indexOf(str, string.indexOf(str) + 1) === -1) {
+
+            const nextIndex = string.indexOf(str, string.indexOf(str, i) + 1);
+            if (nextIndex === -1) {
                 break;
             }
-            if (Math.abs(string.indexOf(str) - string.indexOf(str, string.indexOf(str) + 1)) === str.length) {
+
+            if (nextIndex - string.indexOf(str, i) === str.length) {
                 return false;
             }
         }
@@ -17,30 +20,43 @@ function isStringOk(string: string) {
     return true;
 }
 
-console.log(isStringOk("abab")) // false
+const go = false;
 
-console.log(isStringOk("abcab")) // true
+if (go) {
+    console.log(isStringOk("abab")) // false
 
-console.log(isStringOk("aba")) // true
+    console.log(isStringOk("abcab")) // true
 
-console.log(isStringOk("abaa")) // true
+    console.log(isStringOk("aba")) // true
 
-let string = ""
-let finalStrings = new Set<string>();
-// loop: while (true) {
-//     // try to continiously add to the array and backtrack when it doesn't work
+    console.log(isStringOk("abaa")) // false
 
-//     for (let i = 0; i < letters.length; i++) {
-//         string += letters[i];
-//         console.log(string)
-//         if (!isStringOk(string)) {
-//             string = string.slice(0, -1);
-//             if (finalStrings.has(string)) {
-//                 break loop;
-//             }
-//             finalStrings.add(string);
-//             console.log(string)
-//             break;
-//         }
-//     }
-// }
+    console.log(isStringOk("abaab")) // false
+
+    console.log(isStringOk("abaaba")) // false
+
+    console.log(isStringOk("abacabcbacab")) // true
+
+    console.log(isStringOk("abcabacabcacabcacabcacabacabcacacabca")) // false
+
+} else {
+    const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+    
+    let len = 0;
+    let string = ""
+    let i = 0;
+    while (true) {
+        string += letters[i]
+
+        if (isStringOk(string)) {
+            if (string.length > len) {
+                len = string.length
+                console.log(string)
+            }
+        } else {
+            string = ""
+        }
+
+        i = random(0, letters.length - 1)
+    }
+}
