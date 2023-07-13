@@ -11,17 +11,25 @@ Game states are represented by a list whose first element is its depth and whose
 is a list of numbers each representing a different sized pile in said state.
 """
 
-def print_tree(tree_list):
-    """given the game tree list (in this program it is main_list), 
-    it prints it to the terminal in a readable fashion"""
-    depth = 0
-    for level in tree_list:
-        print("-"*10 + f"\nDepth = {depth}:\n" + "-"*10)
-        output = ""
-        for state in level:
-            output += f"{state[1]},  "
-        print(output)
-        depth +=1
+class State():
+    def __init__(self, piles, parent, child):
+        """piles is a list of numbers, each representing a different pile"""
+        self.piles = piles
+        self.parent = parent
+        self.child = child
+
+    def check_is_dead(self):
+        """function that checks whether or not a given state has no possible moves left to make
+        (ie. the only remaining piles are of size 1 or 2)"""
+        dead_piles = 0
+        for pile in self.piles:
+            if pile in [1,2]:
+                dead_piles +=1
+    
+        if dead_piles == len(self.piles):
+            return True
+        else:
+            return False
 
 def check_is_dead(state):
     """function that checks whether or not a given state has no possible moves left to make
@@ -45,9 +53,48 @@ def break_up_num(num):
                 break
     return(output)
 
+def check_duplicates(tree_list): #doesn't work yet
+    """takes the main_list tree and checks for and 
+    removes duplicate states at each level, returning the new list without duplicates."""
+    output = []
+    depth = 0
+    for level in tree_list:
+        level_list = [x[1] for x in level]
+        no_duplicates = []
+        for state in level_list:
+            for other in no_duplicates:
+                other_other = other[:]
+                same_count = 0
+                for x in state:
+                    if x in other_other:
+                        same_count +=1
+                        other_other.remove(x)
+                if same_count != len(state):
+                    no_duplicates.append(state)
+
+        # reformatting the list of states without duplicates
+        depth +=1
+        to_append = []
+        for state in no_duplicates:
+            to_append.append([depth,state])
+        output.append(to_append)
+    return(output)
+
+def print_tree(tree_list):
+    """given the game tree list (in this program it is main_list), 
+    it prints it to the terminal in a readable fashion"""
+    depth = 0
+    for level in tree_list:
+        print("-"*10 + f"\nDepth = {depth}:\n" + "-"*10)
+        output = ""
+        for state in level:
+            output += f"{state[1]},  "
+        print(output)
+        depth +=1
+
 
 depth = 0
-starting_value = 5
+starting_value = 10
 starting_state = [depth, [starting_value]] # each state is represented by a list in the form [level (ie. depth), [list of numbers, each representing a pile at said level]]
 
 master_list = [] 
@@ -84,3 +131,5 @@ while True:
     else: #resetting and repeating the loop
         previous_list = current_list[:]
         current_list = []
+
+# print(check_duplicates(master_list))
