@@ -48,16 +48,10 @@ def check_duplicates(tree_list):
     output = []
     for level in tree_list:
         no_duplicates = [level[0]]
-        for state in level:
-            state_sorted = state.piles
-            state_sorted.sort()
-            
+        for state in level:            
             different_count = 0
             for other in no_duplicates:
-                other_sorted = other.piles
-                other_sorted.sort()
-
-                if state_sorted != other_sorted: # if not same, adds state to no duplicates
+                if state.piles != other.piles: # if not same, adds state to no duplicates
                     different_count +=1
                 else: # if same, adjusts parent child relationship (essentially merges the objects)
                     other.parents += state.parents
@@ -104,6 +98,7 @@ while True:
                     list_copy = state.piles[:]
                     del list_copy[pile_num]
                     new_list = list_copy[:pile_num] + new +list_copy[pile_num:]
+                    new_list.sort()
                     new_object = State(depth,new_list)
                     new_object.parents.append(state)
                     current_list.append(new_object)
@@ -130,6 +125,4 @@ while True:
 
 print("\nno duplicates:")
 print_tree(check_duplicates(master_list))
-
-
 
