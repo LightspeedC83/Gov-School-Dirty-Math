@@ -29,7 +29,7 @@ class State():
             self.is_dead = True
         else:
             self.is_dead = False
-            
+
 
 def break_up_num(num):
     """function that returns a list of the ways to break up an inputted number into two other uneven nubmers"""
@@ -100,6 +100,7 @@ while True:
                     new_list = list_copy[:pile_num] + new +list_copy[pile_num:]
                     new_list.sort()
                     new_object = State(depth,new_list)
+                    # checking if the parent & children lists are duplicate to the ones to append
                     new_object.parents.append(state)
                     current_list.append(new_object)
                     state.children.append(new_object)

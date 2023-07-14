@@ -1,9 +1,5 @@
 #representing the board
-board = [
-    [1,1,1],
-    [1,1,1,1,1],
-    [1,1,1,1,1,1,1]
-    ]
+board = [3,5,7]
 
 def display_board(board):
     """function that displays the game board in the terminal"""
