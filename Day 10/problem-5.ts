@@ -35,10 +35,19 @@ function genRow(row: number): Fraction[] {
 // 0 1
 // ---...
 // 1 5
+// 2 3 5 7 11 13 19 23 29 33 43 47 59 65 73
+for (let i = 1; i <= 200; i++) {
+    // const row = Deno.args[0] ? parseInt(Deno.args[0]) : 5;
+    const row = i;
+    const fractions = genRow(row);
 
-const row = 7;
-const fractions = genRow(row);
+    console.log(i + " " + fractions.length)
 
-console.log(fractions.map((x) => `${x[0]}`).join("  "));
-console.log("-  -  -  ".repeat(row));
-console.log(fractions.map((x) => `${x[1]}`).join("  "));
+    // console.log(fractions.map((x) => `${x[0]}`).join("  "));
+    // console.log(`${i}-${fractions.length}: ` + fractions.map((x) => `${x[1]}`).join("  "));
+
+    // console.log(fractions.reduce((acc, x) => acc + x[0], 0));
+    // console.log(fractions.reduce((acc, x) => acc + x[1], 0));
+
+    // console.log(fractions.reduce((acc, x) => acc + x[0] / x[1], 0));
+}
