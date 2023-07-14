@@ -1,34 +1,48 @@
+#displaying the rules
+print("Nim:\n  -The board starts with 3 rows containing some number of sticks\n  -Each player removes any number of sticks from a row\n  -The last player to move wins\n")
+
 #representing the board
-board = [3,5,7]
+done = False
+while not done: #getting player input to determine board size
+    starting_board = []
+    for x in range(3):
+        starting_board.append(input(f"Enter the number of sticks for row {x+1}: ").strip())
+    for row in starting_board:
+        if row.isdigit() and row !="0":
+            done = True
+            break
+        else:
+            print("You must enter an integer for all three prompts.")
+            break
+starting_board = [int(x) for x in starting_board]
+board = starting_board[:]
 
 def display_board(board):
     """function that displays the game board in the terminal"""
-    output = "\nGame State:\n    "
-    #first row
-    for stick in board[0]:
-        output += str(stick)
-    output += "\n   "
-    #second row
-    for stick in board[1]:
-        output += str(stick)
-    output += "\n  "
-    #third row
-    for stick in board[2]:
-        output += str(stick)
+    output = "\nGame State:\n"
+    row = 0
+    for pile in board:
+        row +=1
+        output +=f"Row {row}, {pile} sticks remain: "
+        for stick in range(pile):
+                output += "1"
+        output += "\n"
     print(output)
 
-def update_board(board, row, num_to_eliminate):
-    """function that updates game board by taking away num_to_eliminate sticks from the row row"""
-    new_board = board
-    start_index = len([x for x in board[row-1] if x == 0])
-    for x in range(start_index, start_index + num_to_eliminate):
-        new_board[row-1][x] = 0 
+def is_game_over(board):
+    """returns true if there are no sticks left on the game board"""
+    sum = 0
+    for row in board:
+        sum +=row
 
-    return(new_board)
+    if sum == 0:
+        return True
+    else:
+        return False
 
 # main game loop
 done = False
-while done == False:
+while not done:
     # the player will make the first move
     # getting the player's move as a row and a number of sticks to eliminate on said row
     display_board(board)
@@ -44,10 +58,9 @@ while done == False:
         
         row = int(row)
 
-        num_to_eliminate = input("Enter the number of sticks you want to eliminate:").strip()
-        if num_to_eliminate.isdigit():
-            count = len([x for x in board[row-1] if x == 1])
-            if int(num_to_eliminate) <= count:
+        num_to_eliminate = input("Enter the number of sticks you want to eliminate: ").strip()
+        if num_to_eliminate.isdigit() and num_to_eliminate !="0":
+            if int(num_to_eliminate) <= board[row-1]:
                 num_to_eliminate = int(num_to_eliminate)
                 break
             else:
@@ -57,4 +70,32 @@ while done == False:
             print("Please enter an integer.")
             continue
     
-    update_board(board, row, num_to_eliminate)
+    # updating the board with the player's move
+    board[row-1] = board[row-1] - num_to_eliminate
+
+    if is_game_over(board):
+        display_board(board)
+        print("The player wins!")
+        break
+
+    # making the computer's move, given the new board state
+
+    # making a list of move options
+    move_options = []
+    row_to_move = 3
+    for pair in board[0:2],[board[0],board[-1]],board[1:]:
+        move_options.append((row_to_move, pair[0]^pair[1])) #XOR operator finds the third number to make a 3 number losing position in nim
+        row_to_move -=1
+    
+    #deciding which option to move
+    for option in move_options:
+        num_to_eliminate = board[option[0]-1]-option[1]
+        if option[1] <= board[option[0]-1] and num_to_eliminate >0: # if the move is possible to make
+            print(f"\nThe computer removes {num_to_eliminate} sticks from row {option[0]}")
+            board[option[0]-1] = option[1]
+            break
+     
+    if is_game_over(board):
+        display_board(board)
+        print("The computer wins!")
+        break
