@@ -6,7 +6,6 @@ enum Player {
 interface Game<Move> {
     readonly numberOfMoves: number;
     readonly size: number;
-    clone(): unknown;
     clone<T extends Game<Move>>(): T;
     possibleMoves(): Move[];
     move(move: Move): void;
@@ -26,7 +25,7 @@ class Chomp implements Game<[row: number, col: number]> {
         this.size = width * height - 1;
     }
 
-    clone<T extends Chomp>() {
+    clone<T>() {
         const game = new Chomp();
         game.state = structuredClone(this.state);
         game.player = this.player;
@@ -66,7 +65,7 @@ class Chomp implements Game<[row: number, col: number]> {
     }
 
     isWinningMove(move: [row: number, col: number]): boolean {
-        const gameCopy = this.clone();
+        const gameCopy = this.clone<Chomp>();
         gameCopy.move(move);
         return gameCopy.gameOver();
     }
@@ -83,32 +82,31 @@ function negamax(game: Game<unknown>, alpha: number, beta: number): number {
         }
     }
 
-    let max = game.size - game.numberOfMoves;
-    let bestValue = -Infinity;
-
-    if(beta > max) {
-        beta = max;                     // there is no need to keep beta above our max possible score.
-        if (alpha >= beta) return beta;  // prune the exploration if the [alpha;beta] window is empty.
+    const max = game.size - game.numberOfMoves;
+    if (beta > max) {
+        beta = max;
+        if (alpha >= beta) return beta;
     }
 
-    game.possibleMoves().forEach(move => {
-        const gameCopy = game.clone<Chomp>();
-        gameCopy.move(move as any);
-        const value = -negamax(gameCopy, -beta, -alpha);
+    for (const move of game.possibleMoves()) {
+        const gameCopy = game.clone();
+        gameCopy.move(move);
+        const score = -negamax(gameCopy, -beta, -alpha);
         
         if (score >= beta) return score;
-    });
+        if (score > alpha) alpha = score;
+    }
 
-    return bestValue;
+    return alpha;
 }
 
 function bestMove(game: Game<unknown>): null | unknown {
     let bestValue = -Infinity;
     let bestMove: unknown = null;
     game.possibleMoves().forEach(move => {
-        const gameCopy = game.clone<Chomp>();
-        gameCopy.move(move as any);
-        const value = -negamax(gameCopy);
+        const gameCopy = game.clone();
+        gameCopy.move(move);
+        const value = -negamax(gameCopy, -1, 1);
         if (value > bestValue) {
             bestValue = value;
             bestMove = move;
@@ -122,11 +120,11 @@ const moves = Deno.args.map(arg => arg.split('-').map(Number).reverse() as [numb
 
 const game = new Chomp(8, 5);
 moves.forEach(move => game.move(move));
+console.log(game.toString());
+console.log(negamax(game, -1, 1));
 for (const move of game.possibleMoves()) {
     if (game.isWinningMove(move)) {
         console.log('winning move', move);
     }
 }
-console.log(game.toString());
-console.log(bestMove(game))
-console.log(negamax(game))
+console.log(bestMove(game));
