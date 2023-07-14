@@ -1,5 +1,5 @@
 #displaying the rules
-print("Nim:\n  The board starts with 3 rows containing some number of sticks\n  Each player removes any number of sticks from a row\n  The last player to move wins")
+print("Nim:\n  -The board starts with 3 rows containing some number of sticks\n  -Each player removes any number of sticks from a row\n  -The last player to move wins\n")
 
 #representing the board
 done = False
@@ -8,7 +8,7 @@ while not done: #getting player input to determine board size
     for x in range(3):
         starting_board.append(input(f"Enter the number of sticks for row {x+1}: ").strip())
     for row in starting_board:
-        if row.isdigit():
+        if row.isdigit() and row !="0":
             done = True
             break
         else:
@@ -58,8 +58,8 @@ while not done:
         
         row = int(row)
 
-        num_to_eliminate = input("Enter the number of sticks you want to eliminate:").strip()
-        if num_to_eliminate.isdigit():
+        num_to_eliminate = input("Enter the number of sticks you want to eliminate: ").strip()
+        if num_to_eliminate.isdigit() and num_to_eliminate !="0":
             if int(num_to_eliminate) <= board[row-1]:
                 num_to_eliminate = int(num_to_eliminate)
                 break
@@ -74,6 +74,7 @@ while not done:
     board[row-1] = board[row-1] - num_to_eliminate
 
     if is_game_over(board):
+        display_board(board)
         print("The player wins!")
         break
 
