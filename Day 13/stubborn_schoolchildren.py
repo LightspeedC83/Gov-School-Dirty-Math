@@ -1,4 +1,5 @@
-# 
+# this does not work, it will just run forever becuase its THE WORST CODED PIECE OF CRAP
+# WHAT AM I EVEN DOING???
 import random
 
 def print_line():
