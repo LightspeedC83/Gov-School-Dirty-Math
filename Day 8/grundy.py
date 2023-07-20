@@ -30,6 +30,12 @@ class State():
         else:
             self.is_dead = False
 
+    def add_parent(self, new_parent):
+        new_parent.piles.sort()
+        for parent in self.parents:
+            if new_parent.piles in parent.piles: # if that parent state is already a parent of this state
+                pass #AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
 
 def break_up_num(num):
     """function that returns a list of the ways to break up an inputted number into two other uneven nubmers"""
