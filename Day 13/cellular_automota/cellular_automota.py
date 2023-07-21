@@ -3,16 +3,36 @@ import os
 import moviepy.editor as me
 
 # this mapping is set for rule 90, which should make the serpinski triangle
-mapping = {
-    "000": 0,
-    "001": 1,
-    "010": 0,
-    "011": 1,
-    "100": 1,
-    "101": 0,
-    "110": 1,
-    "111": 0,
-}
+while True:
+    rule = input("Enter a number from 0 to 255 for the propagation rule: ").strip()
+    if rule.isdigit():
+        rule = int(rule)
+        rule_int = rule
+        if 0 <= rule and rule <= 255:
+            break
+    print("Please enter an integer between 0 and 255")
+
+states = [
+    "000",
+    "001",
+    "010",
+    "011",
+    "100",
+    "101",
+    "110",
+    "111"
+]
+
+mapping = {}
+rule = str(bin(rule))[2:]
+if len(rule) < len(states):
+    rule = "0"*(len(states)-len(rule)) + rule
+
+i = 0
+for state in states[::-1]:
+    print(state, rule[i])
+    mapping[state] = int(rule[i])
+    i += 1
 
 def find_next(left, cell, right):
     """returns the next cell's value given the three cells above it (left, center, and right)"""
@@ -85,7 +105,7 @@ for t in board_list:
 
 output = Image.new(mode="RGB", size=(board_width,depth+1))
 output.putdata(pixel_list)
-output.save("Day 13/cellular_automota/cellular_automota_output.png")
+output.save(f"Day 13/cellular_automota/cellular_automota_output_rule_{rule_int}.png")
 
 frame_output_folder = "Day 13/cellular_automota/output_frames"
 # frame_num = len([f for f in os.listdir("Day 13/cellular_automota/output_frames")])
@@ -93,5 +113,5 @@ frames = []
 for num in range(frame_count-1):
     frames.append(f"Day 13/cellular_automota/output_frames/{num}.png")
 
-output_clip = me.ImageSequenceClip(frames, fps=16)
-output_clip.write_videofile("Day 13/cellular_automota/cellular_automota_ouput_animation.mp4", fps=16)
+output_clip = me.ImageSequenceClip(frames, fps=20)
+output_clip.write_videofile(f"Day 13/cellular_automota/cellular_automota_ouput_animation_{rule_int}.mp4", fps=20)
