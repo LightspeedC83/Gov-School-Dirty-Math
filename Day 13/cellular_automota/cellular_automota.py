@@ -1,4 +1,6 @@
 from PIL import Image
+import os
+import moviepy.editor as me
 
 # this mapping is set for rule 90, which should make the serpinski triangle
 mapping = {
@@ -18,15 +20,20 @@ def find_next(left, cell, right):
     global mapping
     return mapping[state]
 
-board_width = 2000
-depth = 1000
+board_width = 1000
+depth = 500
 # creating an initial game state with one on cell in the middle
 game_board = [0 for x in range(board_width)]
 game_board[len(game_board)//2] = 1
 
-board_list = [game_board]
+#clearing the output frames folder
+for file in os.listdir("Day 13/cellular_automota/output_frames"):
+    file = "Day 13/cellular_automota/output_frames/" + file
+    os.remove(file)
 
-for x in range(depth):
+board_list = [game_board]
+frame_count = 0
+for x in range(depth-1):
     # print(game_board)
     new_board = []
     i = 0
@@ -47,6 +54,24 @@ for x in range(depth):
     board_list.append(new_board)
     game_board = new_board[:]
 
+    # creating an image with this up to the most recent board state
+    
+    pixel_list = []
+    for t in board_list:
+        for cell in t:
+            if cell ==0:
+                pixel_list.append((255,255,255))
+            else:
+                pixel_list.append((0,0,0))
+    
+    for x in range(board_width*depth-len(pixel_list)):
+        pixel_list.append((255,255,255))
+    
+    frame_output = Image.new(mode="RGB", size=(board_width,depth))
+    frame_output.putdata(pixel_list)
+    frame_output.save(f"Day 13/cellular_automota/output_frames/{frame_count}.png")
+    
+    frame_count +=1
 
 # saving the image
 pixel_list = []
@@ -59,7 +84,14 @@ for t in board_list:
             pixel_list.append((0,0,0))
 
 output = Image.new(mode="RGB", size=(board_width,depth+1))
-
 output.putdata(pixel_list)
+output.save("Day 13/cellular_automota/cellular_automota_output.png")
 
-output.save("Day 13/cellular_automota_output.png")
+frame_output_folder = "Day 13/cellular_automota/output_frames"
+# frame_num = len([f for f in os.listdir("Day 13/cellular_automota/output_frames")])
+frames = []
+for num in range(frame_count-1):
+    frames.append(f"Day 13/cellular_automota/output_frames/{num}.png")
+
+output_clip = me.ImageSequenceClip(frames, fps=16)
+output_clip.write_videofile("Day 13/cellular_automota/cellular_automota_ouput_animation.mp4", fps=16)
