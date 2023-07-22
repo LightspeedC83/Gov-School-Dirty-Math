@@ -2,7 +2,7 @@ from PIL import Image
 import os
 import moviepy.editor as me
 
-# this mapping is set for rule 90, which should make the serpinski triangle
+# getting the rule to use
 while True:
     rule = input("Enter a number from 0 to 255 for the propagation rule: ").strip()
     if rule.isdigit():
@@ -59,15 +59,27 @@ for x in range(depth-1):
     i = 0
     for cell in game_board:
         # getting the arraingement of 3 cells
-        if i ==0: # if it's the first cell
-            left = 0
-            right = game_board[i+1]
-        if i == len(game_board)-1: # if it's the last cell
-            left = game_board[i-1]
-            right = 0
-        else: #if a cell in between 
-            left = game_board[i-1]
-            right = game_board[i+1]
+        if mapping["000"] == 0: # if the off goes to off, it does this (it pretends that its off at the edges)
+            if i ==0: # if it's the first cell (it pretends there's white space next to it going off the image)
+                left = 0
+                right = game_board[i+1]
+            if i == len(game_board)-1: # if it's the last cell
+                left = game_board[i-1]
+                right = 0
+            else: #if a cell in between 
+                left = game_board[i-1]
+                right = game_board[i+1]
+        else: # if the off goes to on, it pretends that it's on on the edges
+            if i ==0: # if it's the first cell (it pretends there's white space next to it going off the image)
+                left = 1
+                right = game_board[i+1]
+            if i == len(game_board)-1: # if it's the last cell
+                left = game_board[i-1]
+                right = 1
+            else: #if a cell in between 
+                left = game_board[i-1]
+                right = game_board[i+1]
+
         i+=1
         new_board.append(find_next(left, cell, right))
 
