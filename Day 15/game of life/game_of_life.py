@@ -51,13 +51,54 @@ while True:
     print("\nThe new starting board is...")
     print_board_terminal(show_axis=True)
 
-# updating the board state according to the rules for John Conway's game of life
-y_pos = 0
-for y in board:
-    x_pos = 0
-    for x in y:
-        # for each of the cells, we find the number of neighbors it has which are on
+# starting the simulation
+while True:
+    # updating the board state according to the rules for John Conway's game of life
+    next_board = board[:]
+    y_pos = 0
+    for y in board:
+        x_pos = 0
+        for cell in y:
+            # for each of the cells, we find the number of neighbors it has which are on
+            # this is non functional
+            try: 
+                #finding the neighbors' values
+                up_neigbors = board[y_pos-1][x_pos-1:x_pos+2]
+                down_neighbors = board[y_pos+1][x_pos-1:x_pos+2]
+                side_neighbors = board[x_pos-1:x_pos+2:2]
+            except IndexError:
+                # if it's on the edge, it just dies
+                next_board[y_pos][x_pos] = 0
+                continue
+            
+            #determining how many neighbors are on
+            num_on_neighbors = 0
+            for n in up_neigbors + down_neighbors + side_neighbors:
+                if n == 1:
+                    num_on_neighbors +=1
+            
+            print(x_pos,y_pos, num_on_neighbors)
 
-        x_pos += 1
-    y_pos += 1
-
+            # determining the state of the cell in the next iteration based on the number of neighbors that are on
+            if cell ==1: # if the cell is alive
+                if not (num_on_neighbors ==2 or num_on_neighbors ==3):
+                    # if the cell doesn't have 2 or 3 live neighbors, it dies and the cell must be turned off
+                    # otherwise, no updates must be made
+                    next_board[y_pos][x_pos] = 0
+    
+            else: # if the cell is dead
+                if num_on_neighbors == 3:
+                    # if it has 3 neighbors it comes alive! otherwise no updates must be made
+                    next_board[y_pos][x_pos] = 1
+    
+            x_pos += 1
+        y_pos += 1
+    
+    # changing the board state to time+1
+    board = next_board[:]
+    print_board_terminal()
+    # updating the board state according to the rules for John Conway's game of life
+    increment = input("Press enter to incrment time, type 'quit' to quit").strip()
+    if increment != "":
+        break
+    
