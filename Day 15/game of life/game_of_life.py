@@ -19,3 +19,5 @@ print("this is the empty board:")
 print_board_terminal()
 
 #getting a starting state from the user
+while True:
+    coordinate = input("enter a coordinate")
