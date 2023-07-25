@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 x_list = [0]
 y_list_a = [3] #starting values for populations
 y_list_b = [1]
-max_depth = 500
+max_depth = 50
 count = 0
 
 def problem_5(a,b):
