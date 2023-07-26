@@ -98,7 +98,7 @@ while True:
     board = next_board[:]
     print_board_terminal()
     # updating the board state according to the rules for John Conway's game of life
-    increment = input("Press enter to incrment time, type 'quit' to quit").strip()
+    increment = input("Press enter to incrment time, type 'quit' to quit: ").strip()
     if increment != "":
         break
     
