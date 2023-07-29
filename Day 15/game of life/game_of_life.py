@@ -101,4 +101,3 @@ while True:
     increment = input("Press enter to incrment time, type 'quit' to quit: ").strip()
     if increment != "":
         break
-    

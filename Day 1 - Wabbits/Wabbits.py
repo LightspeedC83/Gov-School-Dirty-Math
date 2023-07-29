@@ -47,7 +47,7 @@ def problem_2(depth):
     #setting up the plot
     plt.xlabel("year")
     plt.ylabel("number of rabbit pairs")
-    plt.title("Wabbits - problem 1")
+    plt.title("Wabbits")
 
     #setting up the simulation
     wabbits_list = []
@@ -76,4 +76,4 @@ def problem_2(depth):
     plt.plot(x_points_list, y_points_list)
     plt.show()
 
-problem_2(5)
+problem_2(10)

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 plt.xlabel("iterations")
 plt.ylabel("Y")
-plt.title("Day 10, problem 6 (Collatz Conjecture w/ negatives)")
+plt.title("Collatz Conjecture")
 
 def function(x):
     if x%2==0:
@@ -12,10 +12,10 @@ def function(x):
     else:
         return(x*3 +1)
 
-depth = 200
-starting_range = 1000
+depth = 150
+starting_range = 100
 
-for starting_number in range(-1*starting_range,starting_range):
+for starting_number in range(starting_range):
     x_list = [0]
     y_list = [starting_number] # starting number
 

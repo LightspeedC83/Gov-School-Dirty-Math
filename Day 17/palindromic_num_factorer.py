@@ -34,10 +34,10 @@ def factor_palindromes():
 	
 	for key in palindromes.keys():
 		print(key, ": ", palindromes[key])
-# factor_palindromes()
+factor_palindromes()
 
 def is_divisible_by_11():
 	for num in range(int("1"+"0"*16), int("1"+"0"*16)):
 		string = str(num)
 		if string == string[::-1]:
-			pass
+			print(num)

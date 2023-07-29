@@ -50,7 +50,7 @@ def find_next(left, cell, right):
     global mapping
     return mapping[state]
 
-depth = 500
+depth = 250
 board_width = depth*2
 
 # creating an initial game state with one on cell in the middle
@@ -58,8 +58,8 @@ game_board = [0 for x in range(board_width)]
 game_board[len(game_board)//2] = 1
 
 #clearing the output frames folder
-for file in os.listdir("Day 13/cellular_automota/output_frames"):
-    file = "Day 13/cellular_automota/output_frames/" + file
+for file in os.listdir("Day 13/one_dimensional_cellular_automota/output_frames"):
+    file = "Day 13/one_dimensional_cellular_automota/output_frames/" + file
     os.remove(file)
 
 #starting the image generation process
@@ -127,7 +127,7 @@ with Bar("\nRunning the simulations...") as bar:
         
         frame_output = Image.new(mode="RGB", size=(board_width,depth))
         frame_output.putdata(pixel_list)
-        frame_output.save(f"Day 13/cellular_automota/output_frames/{frame_count}.png")
+        frame_output.save(f"Day 13/one_dimensional_cellular_automota/output_frames/{frame_count}.png")
         
         if 100*(x/depth)//1 > previous_percent:
             bar.next()
@@ -160,13 +160,13 @@ marker = ""
 if gradient:
     marker = "_gradient"
 
-output.save(f"Day 13/cellular_automota/cellular_automota_output_rule_{rule_int}{marker}.png")
+output.save(f"Day 13/one_dimensional_cellular_automota/cellular_automota_output_rule_{rule_int}{marker}_{str(board_width)}x{str(depth)}.png")
 
-frame_output_folder = "Day 13/cellular_automota/output_frames"
-# frame_num = len([f for f in os.listdir("Day 13/cellular_automota/output_frames")])
+frame_output_folder = "Day 13/one_dimensional_cellular_automota/output_frames"
+# frame_num = len([f for f in os.listdir("Day 13/one_dimensional_cellular_automota/output_frames")])
 frames = []
 for num in range(frame_count-1):
-    frames.append(f"Day 13/cellular_automota/output_frames/{num}.png")
+    frames.append(f"Day 13/one_dimensional_cellular_automota/output_frames/{num}.png")
 
 output_clip = me.ImageSequenceClip(frames, fps=20)
-output_clip.write_videofile(f"Day 13/cellular_automota/cellular_automota_ouput_animation_{rule_int}{marker}.mp4", fps=20)
+output_clip.write_videofile(f"Day 13/one_dimensional_cellular_automota/cellular_automota_ouput_animation_{rule_int}{marker}_{str(board_width)}x{str(depth)}.gif", fps=30)

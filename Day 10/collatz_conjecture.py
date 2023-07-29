@@ -13,7 +13,7 @@ def function(x):
         return(x*3 +1)
 
 
-starting_range = 1000
+starting_range = 100
 for starting_number in range(1,starting_range):
     x_list = [0]
     y_list = [starting_number] # starting number
